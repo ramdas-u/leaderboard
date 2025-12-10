@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-10T10:22:22.099Z",
+  "lastUpdated": "2025-12-10T11:37:27.478Z",
   "updatedBy": "Ramdas",
   "weekInfo": {
     "from": "2025-12-05",
@@ -16,25 +16,25 @@
       "id": 1,
       "name": "Divya",
       "todayCreated": 1,
-      "totalCreated": 2
+      "totalCreated": 8
     },
     {
       "id": 2,
       "name": "Sahana",
       "todayCreated": 1,
-      "totalCreated": 14
+      "totalCreated": 27
     },
     {
       "id": 3,
       "name": "Samhitha",
       "todayCreated": 1,
-      "totalCreated": 14
+      "totalCreated": 15
     },
     {
       "id": 4,
       "name": "Praveen",
       "todayCreated": 1,
-      "totalCreated": 2
+      "totalCreated": 0
     },
     {
       "id": 5,
@@ -64,13 +64,13 @@
       "id": 9,
       "name": "Rajpaul",
       "todayCreated": 1,
-      "totalCreated": 4
+      "totalCreated": 12
     },
     {
       "id": 10,
       "name": "Sharanya",
       "todayCreated": 1,
-      "totalCreated": 13
+      "totalCreated": 2
     }
   ]
 }
