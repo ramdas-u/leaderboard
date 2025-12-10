@@ -154,8 +154,7 @@
 
       const totalCreated   = teamData.reduce((s, m) => s + (m.totalCreated   || 0), 0);
       const totalApproved  = teamData.reduce((s, m) => s + (m.totalApproved  || 0), 0);
-      const weekCreated    = teamData.reduce((s, m) => s + (m.todayCreated   || 0), 0);   // "today" used as week numbers
-      const weekApproved   = teamData.reduce((s, m) => s + (m.todayApproved  || 0), 0);
+      const weekCreated    = teamData.reduce((s, m) => s + (m.todayCreated   || 0), 0);   // "today" field = weekly value
 
       const remainingCreated  = Math.max((goalData.targetCreated  || 0) - totalCreated, 0);
       const remainingApproved = Math.max((goalData.targetApproved || 0) - totalApproved, 0);
@@ -163,10 +162,12 @@
       const createdProgress  = goalData.targetCreated  ? (totalCreated  / goalData.targetCreated)  * 100 : 0;
       const approvedProgress = goalData.targetApproved ? (totalApproved / goalData.targetApproved) * 100 : 0;
 
-      const topWeekCreated   = [...teamData].sort((a,b)=> (b.todayCreated  || 0)-(a.todayCreated  || 0))[0];
-      const topWeekApproved  = [...teamData].sort((a,b)=> (b.todayApproved || 0)-(a.todayApproved || 0))[0];
-      const topTotalCreated  = [...teamData].sort((a,b)=> (b.totalCreated  || 0)-(a.totalCreated  || 0))[0];
-      const topTotalApproved = [...teamData].sort((a,b)=> (b.totalApproved || 0)-(a.totalApproved || 0))[0];
+      const top3WeekCreated  = [...teamData]
+        .sort((a,b)=> (b.todayCreated  || 0)-(a.todayCreated  || 0))
+        .slice(0,3);
+      const top3TotalCreated = [...teamData]
+        .sort((a,b)=> (b.totalCreated  || 0)-(a.totalCreated  || 0))
+        .slice(0,3);
 
       return (
         <div className="min-h-screen bg-gradient-to-br from-sky-950 via-slate-950 to-slate-900 text-white flex items-stretch justify-center">
@@ -235,20 +236,20 @@
             )}
 
             {/* Top row: Hall of Fame primary, Progress secondary */}
-            <div className="grid grid-cols-1 lg:grid-cols-[1.6fr,1.4fr] gap-5 lg:gap-6 mb-6">
-              {/* Hall of Fame - PRIMARY */}
-              <div className="bg-slate-900/60 border border-slate-800 rounded-2xl shadow-xl p-4 sm:p-6 flex flex-col gap-3">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <span className="inline-flex items-center justify-center w-9 h-9 rounded-2xl bg-amber-400/10 text-amber-300">
+            <div className="grid grid-cols-1 lg:grid-cols-[1.7fr,1.3fr] gap-5 lg:gap-6 mb-6">
+              {/* Weekly Hall of Fame - PRIMARY */}
+              <div className="bg-slate-900/60 border border-slate-800 rounded-2xl shadow-2xl p-5 sm:p-7 flex flex-col gap-4">
+                <div className="flex items-start justify-between mb-2">
+                  <div className="flex items-start gap-3">
+                    <span className="inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-amber-400/10 text-amber-300 mt-1">
                       <Medal />
                     </span>
                     <div>
-                      <h2 className="text-lg sm:text-xl font-semibold text-slate-50">
+                      <h2 className="text-xl sm:text-2xl font-semibold text-slate-50">
                         Weekly Hall of Fame
                       </h2>
-                      <p className="text-[11px] sm:text-xs text-slate-400">
-                        Weekly and overall champions based on script creation & approvals.
+                      <p className="text-[11px] sm:text-xs text-slate-400 mt-1">
+                        Weekly and overall champions based on script creation.
                       </p>
                     </div>
                   </div>
@@ -258,133 +259,121 @@
                       This week created:{" "}
                       <span className="text-sky-200 font-semibold">{weekCreated}</span>
                     </span>
-                    <span>
-                      This week approved:{" "}
-                      <span className="text-emerald-200 font-semibold">{weekApproved}</span>
-                    </span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
-                  <div className="p-3 rounded-xl bg-slate-800/70">
-                    <p className="text-[11px] uppercase tracking-[0.2em] text-sky-300 mb-1">
-                      This Week · Created
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
+                  {/* This week - Top 3 */}
+                  <div className="p-3 sm:p-4 rounded-xl bg-slate-800/70">
+                    <p className="text-[11px] uppercase tracking-[0.2em] text-sky-300 mb-2">
+                      This Week · Top 3
                     </p>
-                    {topWeekCreated ? (
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 rounded-full bg-sky-500/20 border border-sky-400/60 flex items-center justify-center text-[11px]">
-                            {getInitials(topWeekCreated.name)}
-                          </div>
-                          <div>
-                            <p className="font-semibold text-slate-50">
-                              {topWeekCreated.name}
-                            </p>
-                            <p className="text-[11px] text-slate-400">
-                              Created this week
-                            </p>
-                          </div>
-                        </div>
-                        <p className="text-lg font-bold text-sky-300">
-                          {topWeekCreated.todayCreated || 0}
-                        </p>
-                      </div>
-                    ) : (
+                    {top3WeekCreated.length === 0 ? (
                       <p className="text-slate-400">No data</p>
+                    ) : (
+                      <div className="flex flex-col gap-2.5">
+                        {top3WeekCreated.map((m, idx) => (
+                          <div
+                            key={m.id || `week-${idx}`}
+                            className={
+                              idx === 0
+                                ? "flex items-center justify-between gap-3 rounded-xl bg-slate-900/80 px-3 py-2.5 border border-sky-700/70"
+                                : "flex items-center justify-between gap-3 rounded-lg bg-slate-900/40 px-2.5 py-2"
+                            }
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <div className={
+                                idx === 0
+                                  ? "w-8 h-8 rounded-full bg-sky-500/25 border border-sky-400/70 flex items-center justify-center text-[11px] font-semibold"
+                                  : "w-7 h-7 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-[11px]"
+                              }>
+                                {getInitials(m.name)}
+                              </div>
+                              <div>
+                                <div className={
+                                  idx === 0
+                                    ? "font-semibold text-slate-50 text-sm"
+                                    : "font-medium text-slate-100 text-xs sm:text-sm"
+                                }>
+                                  #{idx + 1} · {m.name}
+                                </div>
+                                <div className="text-[11px] text-slate-400">
+                                  Created this week
+                                </div>
+                              </div>
+                            </div>
+                            <div className={
+                              idx === 0
+                                ? "text-xl font-extrabold text-sky-300"
+                                : "text-base font-bold text-sky-200"
+                            }>
+                              {m.todayCreated || 0}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     )}
                   </div>
 
-                  <div className="p-3 rounded-xl bg-slate-800/70">
-                    <p className="text-[11px] uppercase tracking-[0.2em] text-emerald-300 mb-1">
-                      This Week · Approved
+                  {/* Overall - Top 3 */}
+                  <div className="p-3 sm:p-4 rounded-xl bg-slate-800/70">
+                    <p className="text-[11px] uppercase tracking-[0.2em] text-emerald-300 mb-2">
+                      Overall · Top 3
                     </p>
-                    {topWeekApproved ? (
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 rounded-full bg-emerald-500/20 border border-emerald-400/60 flex items-center justify-center text-[11px]">
-                            {getInitials(topWeekApproved.name)}
-                          </div>
-                          <div>
-                            <p className="font-semibold text-slate-50">
-                              {topWeekApproved.name}
-                            </p>
-                            <p className="text-[11px] text-slate-400">
-                              Approved this week
-                            </p>
-                          </div>
-                        </div>
-                        <p className="text-lg font-bold text-emerald-300">
-                          {topWeekApproved.todayApproved || 0}
-                        </p>
-                      </div>
-                    ) : (
+                    {top3TotalCreated.length === 0 ? (
                       <p className="text-slate-400">No data</p>
-                    )}
-                  </div>
-
-                  <div className="p-3 rounded-xl bg-slate-800/70">
-                    <p className="text-[11px] uppercase tracking-[0.2em] text-sky-300 mb-1">
-                      Overall · Created
-                    </p>
-                    {topTotalCreated ? (
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 rounded-full bg-sky-500/20 border border-sky-400/60 flex items-center justify-center text-[11px]">
-                            {getInitials(topTotalCreated.name)}
-                          </div>
-                          <div>
-                            <p className="font-semibold text-slate-50">
-                              {topTotalCreated.name}
-                            </p>
-                            <p className="text-[11px] text-slate-400">
-                              Total created
-                            </p>
-                          </div>
-                        </div>
-                        <p className="text-lg font-bold text-sky-300">
-                          {topTotalCreated.totalCreated || 0}
-                        </p>
-                      </div>
                     ) : (
-                      <p className="text-slate-400">No data</p>
-                    )}
-                  </div>
-
-                  <div className="p-3 rounded-xl bg-slate-800/70">
-                    <p className="text-[11px] uppercase tracking-[0.2em] text-emerald-300 mb-1">
-                      Overall · Approved
-                    </p>
-                    {topTotalApproved ? (
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 rounded-full bg-emerald-500/20 border border-emerald-400/60 flex items-center justify-center text-[11px]">
-                            {getInitials(topTotalApproved.name)}
+                      <div className="flex flex-col gap-2.5">
+                        {top3TotalCreated.map((m, idx) => (
+                          <div
+                            key={m.id || `overall-${idx}`}
+                            className={
+                              idx === 0
+                                ? "flex items-center justify-between gap-3 rounded-xl bg-slate-900/80 px-3 py-2.5 border border-emerald-700/70"
+                                : "flex items-center justify-between gap-3 rounded-lg bg-slate-900/40 px-2.5 py-2"
+                            }
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <div className={
+                                idx === 0
+                                  ? "w-8 h-8 rounded-full bg-emerald-500/25 border border-emerald-400/70 flex items-center justify-center text-[11px] font-semibold"
+                                  : "w-7 h-7 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-[11px]"
+                              }>
+                                {getInitials(m.name)}
+                              </div>
+                              <div>
+                                <div className={
+                                  idx === 0
+                                    ? "font-semibold text-slate-50 text-sm"
+                                    : "font-medium text-slate-100 text-xs sm:text-sm"
+                                }>
+                                  #{idx + 1} · {m.name}
+                                </div>
+                                <div className="text-[11px] text-slate-400">
+                                  Total created
+                                </div>
+                              </div>
+                            </div>
+                            <div className={
+                              idx === 0
+                                ? "text-xl font-extrabold text-emerald-300"
+                                : "text-base font-bold text-emerald-200"
+                            }>
+                              {m.totalCreated || 0}
+                            </div>
                           </div>
-                          <div>
-                            <p className="font-semibold text-slate-50">
-                              {topTotalApproved.name}
-                            </p>
-                            <p className="text-[11px] text-slate-400">
-                              Total approved
-                            </p>
-                          </div>
-                        </div>
-                        <p className="text-lg font-bold text-emerald-300">
-                          {topTotalApproved.totalApproved || 0}
-                        </p>
+                        ))}
                       </div>
-                    ) : (
-                      <p className="text-slate-400">No data</p>
                     )}
                   </div>
                 </div>
               </div>
 
-              {/* Progress - SECONDARY */}
-              <div className="bg-slate-900/60 border border-slate-800 rounded-2xl shadow-xl p-4 sm:p-6 flex flex-col gap-4">
-                <div className="flex items-center justify-between gap-3">
+              {/* Overall Progress - SECONDARY */}
+              <div className="bg-slate-900/60 border border-slate-800 rounded-2xl shadow-2xl p-5 sm:p-7 flex flex-col gap-4">
+                <div className="flex items-center justify-between gap-3 mb-1">
                   <div>
-                    <h2 className="text-lg sm:text-xl font-semibold text-slate-50 flex items-center gap-2">
+                    <h2 className="text-xl sm:text-2xl font-semibold text-slate-50 flex items-center gap-2">
                       Overall Progress
                       <span className="inline-flex items-center gap-1 text-[11px] sm:text-xs text-slate-400">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -392,12 +381,15 @@
                       </span>
                     </h2>
                     <p className="text-xs sm:text-sm text-slate-400 mt-1">
-                      Tracking both script creation and approvals vs target
+                      Tracking script creation and approvals vs release targets.
                     </p>
                   </div>
                   <div className="hidden sm:flex flex-col items-end text-xs text-slate-400">
-                    <span>This week created: <span className="text-sky-300 font-semibold">{weekCreated}</span></span>
-                    <span>This week approved: <span className="text-emerald-300 font-semibold">{weekApproved}</span></span>
+                    <span className="font-medium text-sky-300">{getWeekLabel()}</span>
+                    <span>
+                      This week created:{" "}
+                      <span className="text-sky-300 font-semibold">{weekCreated}</span>
+                    </span>
                   </div>
                 </div>
 
@@ -409,20 +401,20 @@
                         <p className="text-xs uppercase tracking-[0.18em] text-sky-300">
                           Created
                         </p>
-                        <p className="text-lg font-semibold text-slate-50">
+                        <p className="text-lg sm:text-xl font-semibold text-slate-50">
                           {totalCreated} / {goalData.targetCreated || 0}
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="text-2xl font-extrabold text-sky-300">
+                        <p className="text-2xl sm:text-3xl font-extrabold text-sky-300">
                           {createdProgress.toFixed(0)}%
                         </p>
                         <p className="text-[11px] text-slate-400">of target</p>
                       </div>
                     </div>
-                    <div className="w-full h-3 rounded-full bg-slate-800 overflow-hidden">
+                    <div className="w-full h-3.5 rounded-full bg-slate-800 overflow-hidden">
                       <div
-                        className="h-3 rounded-full bg-gradient-to-r from-sky-400 via-sky-300 to-emerald-300 transition-all duration-700"
+                        className="h-3.5 rounded-full bg-gradient-to-r from-sky-400 via-sky-300 to-emerald-300 transition-all duration-700"
                         style={{ width: `${Math.min(createdProgress, 120)}%` }}
                       />
                     </div>
@@ -433,27 +425,27 @@
                     </p>
                   </div>
 
-                  {/* Approved progress */}
+                  {/* Approved progress (overall only) */}
                   <div className="p-3 sm:p-4 rounded-xl bg-emerald-950/60 border border-emerald-900/60">
                     <div className="flex items-center justify-between mb-2">
                       <div>
                         <p className="text-xs uppercase tracking-[0.18em] text-emerald-300">
-                          Approved
+                          Approved (Overall)
                         </p>
-                        <p className="text-lg font-semibold text-slate-50">
+                        <p className="text-lg sm:text-xl font-semibold text-slate-50">
                           {totalApproved} / {goalData.targetApproved || 0}
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="text-2xl font-extrabold text-emerald-300">
+                        <p className="text-2xl sm:text-3xl font-extrabold text-emerald-300">
                           {approvedProgress.toFixed(0)}%
                         </p>
                         <p className="text-[11px] text-slate-400">of target</p>
                       </div>
                     </div>
-                    <div className="w-full h-3 rounded-full bg-slate-800 overflow-hidden">
+                    <div className="w-full h-3.5 rounded-full bg-slate-800 overflow-hidden">
                       <div
-                        className="h-3 rounded-full bg-gradient-to-r from-emerald-400 via-emerald-300 to-sky-300 transition-all duration-700"
+                        className="h-3.5 rounded-full bg-gradient-to-r from-emerald-400 via-emerald-300 to-sky-300 transition-all duration-700"
                         style={{ width: `${Math.min(approvedProgress, 120)}%` }}
                       />
                     </div>
@@ -489,7 +481,6 @@
                     <tr className="border-b border-slate-800 text-[11px] sm:text-xs uppercase tracking-[0.16em] text-slate-400">
                       <th className="py-2 pr-3 font-medium">Member</th>
                       <th className="py-2 px-3 font-medium text-right">This Week Created</th>
-                      <th className="py-2 px-3 font-medium text-right">This Week Approved</th>
                       <th className="py-2 px-3 font-medium text-right">Total Created</th>
                       <th className="py-2 px-3 font-medium text-right">Total Approved</th>
                     </tr>
@@ -497,7 +488,7 @@
                   <tbody>
                     {teamData.length === 0 && (
                       <tr>
-                        <td colSpan="5" className="py-6 text-center text-slate-500">
+                        <td colSpan="4" className="py-6 text-center text-slate-500">
                           No data loaded. Ensure count.json is present in the repo.
                         </td>
                       </tr>
@@ -521,9 +512,6 @@
                         </td>
                         <td className="py-2 px-3 text-right text-sky-200 font-semibold">
                           {m.todayCreated || 0}
-                        </td>
-                        <td className="py-2 px-3 text-right text-emerald-200 font-semibold">
-                          {m.todayApproved || 0}
                         </td>
                         <td className="py-2 px-3 text-right">
                           {m.totalCreated || 0}
