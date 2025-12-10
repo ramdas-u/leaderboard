@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2025-12-10T07:54:17.633Z",
+  "lastUpdated": "2025-12-10T08:17:54.219Z",
   "updatedBy": "Ramdas",
   "weekInfo": {
-    "from": "2025-12-12",
-    "to": "2025-12-18"
+    "from": "2025-12-04",
+    "to": "2025-12-12"
   },
   "goals": {
     "targetCreated": 175,
@@ -21,14 +21,14 @@
     {
       "id": 2,
       "name": "Sahana",
-      "todayCreated": 4,
+      "todayCreated": 6,
       "totalCreated": 34,
       "totalApproved": 15
     },
     {
       "id": 3,
       "name": "Samhitha",
-      "todayCreated": 3,
+      "todayCreated": 5,
       "totalCreated": 19,
       "totalApproved": 13
     },
