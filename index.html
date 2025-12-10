@@ -154,7 +154,7 @@
 
       const totalCreated   = teamData.reduce((s, m) => s + (m.totalCreated   || 0), 0);
       const totalApproved  = teamData.reduce((s, m) => s + (m.totalApproved  || 0), 0);
-      const weekCreated    = teamData.reduce((s, m) => s + (m.todayCreated   || 0), 0);   // "today" field = weekly value
+      const weekCreated    = teamData.reduce((s, m) => s + (m.todayCreated   || 0), 0);   // "today" = weekly
 
       const remainingCreated  = Math.max((goalData.targetCreated  || 0) - totalCreated, 0);
       const remainingApproved = Math.max((goalData.targetApproved || 0) - totalApproved, 0);
@@ -236,10 +236,10 @@
             )}
 
             {/* Top row: Hall of Fame primary, Progress secondary */}
-            <div className="grid grid-cols-1 lg:grid-cols-[1.7fr,1.3fr] gap-5 lg:gap-6 mb-6">
+            <div className="grid grid-cols-1 lg:grid-cols-[1.9fr,1.1fr] gap-5 lg:gap-6 mb-6">
               {/* Weekly Hall of Fame - PRIMARY */}
-              <div className="bg-slate-900/60 border border-slate-800 rounded-2xl shadow-2xl p-5 sm:p-7 flex flex-col gap-4">
-                <div className="flex items-start justify-between mb-2">
+              <div className="bg-slate-900/60 border border-slate-800 rounded-2xl shadow-2xl p-5 sm:p-7 flex flex-col gap-5">
+                <div className="flex items-start justify-between">
                   <div className="flex items-start gap-3">
                     <span className="inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-amber-400/10 text-amber-300 mt-1">
                       <Medal />
@@ -262,115 +262,113 @@
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
-                  {/* This week - Top 3 */}
-                  <div className="p-3 sm:p-4 rounded-xl bg-slate-800/70">
-                    <p className="text-[11px] uppercase tracking-[0.2em] text-sky-300 mb-2">
-                      This Week · Top 3
-                    </p>
-                    {top3WeekCreated.length === 0 ? (
-                      <p className="text-slate-400">No data</p>
-                    ) : (
-                      <div className="flex flex-col gap-2.5">
-                        {top3WeekCreated.map((m, idx) => (
-                          <div
-                            key={m.id || `week-${idx}`}
-                            className={
-                              idx === 0
-                                ? "flex items-center justify-between gap-3 rounded-xl bg-slate-900/80 px-3 py-2.5 border border-sky-700/70"
-                                : "flex items-center justify-between gap-3 rounded-lg bg-slate-900/40 px-2.5 py-2"
-                            }
-                          >
-                            <div className="flex items-center gap-2.5">
-                              <div className={
-                                idx === 0
-                                  ? "w-8 h-8 rounded-full bg-sky-500/25 border border-sky-400/70 flex items-center justify-center text-[11px] font-semibold"
-                                  : "w-7 h-7 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-[11px]"
-                              }>
-                                {getInitials(m.name)}
-                              </div>
-                              <div>
-                                <div className={
-                                  idx === 0
-                                    ? "font-semibold text-slate-50 text-sm"
-                                    : "font-medium text-slate-100 text-xs sm:text-sm"
-                                }>
-                                  #{idx + 1} · {m.name}
-                                </div>
-                                <div className="text-[11px] text-slate-400">
-                                  Created this week
-                                </div>
-                              </div>
-                            </div>
+                {/* This Week - Top 3 horizontal */}
+                <div>
+                  <p className="text-[11px] uppercase tracking-[0.2em] text-sky-300 mb-3">
+                    This Week · Top 3
+                  </p>
+                  {top3WeekCreated.length === 0 ? (
+                    <p className="text-slate-400 text-sm">No data</p>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {top3WeekCreated.map((m, idx) => (
+                        <div
+                          key={m.id || `week-${idx}`}
+                          className={
+                            idx === 0
+                              ? "rounded-2xl bg-slate-900/80 border border-sky-500/70 px-4 py-3 flex flex-col justify-between"
+                              : "rounded-xl bg-slate-900/50 border border-slate-700/80 px-3 py-2.5 flex flex-col justify-between"
+                          }
+                        >
+                          <div className="flex items-center gap-2.5 mb-2">
                             <div className={
                               idx === 0
-                                ? "text-xl font-extrabold text-sky-300"
-                                : "text-base font-bold text-sky-200"
+                                ? "w-9 h-9 rounded-full bg-sky-500/25 border border-sky-400/80 flex items-center justify-center text-xs font-semibold"
+                                : "w-7 h-7 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-[11px]"
                             }>
-                              {m.todayCreated || 0}
+                              {getInitials(m.name)}
+                            </div>
+                            <div>
+                              <div className={
+                                idx === 0
+                                  ? "font-semibold text-slate-50 text-base sm:text-lg"
+                                  : "font-medium text-slate-100 text-xs sm:text-sm"
+                              }>
+                                #{idx + 1} · {m.name}
+                              </div>
+                              <div className="text-[11px] text-slate-400">
+                                Created this week
+                              </div>
                             </div>
                           </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                          <div className={
+                            idx === 0
+                              ? "text-2xl sm:text-3xl font-extrabold text-sky-300 text-right"
+                              : "text-lg font-bold text-sky-200 text-right"
+                          }>
+                            {m.todayCreated || 0}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
 
-                  {/* Overall - Top 3 */}
-                  <div className="p-3 sm:p-4 rounded-xl bg-slate-800/70">
-                    <p className="text-[11px] uppercase tracking-[0.2em] text-emerald-300 mb-2">
-                      Overall · Top 3
-                    </p>
-                    {top3TotalCreated.length === 0 ? (
-                      <p className="text-slate-400">No data</p>
-                    ) : (
-                      <div className="flex flex-col gap-2.5">
-                        {top3TotalCreated.map((m, idx) => (
-                          <div
-                            key={m.id || `overall-${idx}`}
-                            className={
-                              idx === 0
-                                ? "flex items-center justify-between gap-3 rounded-xl bg-slate-900/80 px-3 py-2.5 border border-emerald-700/70"
-                                : "flex items-center justify-between gap-3 rounded-lg bg-slate-900/40 px-2.5 py-2"
-                            }
-                          >
-                            <div className="flex items-center gap-2.5">
-                              <div className={
-                                idx === 0
-                                  ? "w-8 h-8 rounded-full bg-emerald-500/25 border border-emerald-400/70 flex items-center justify-center text-[11px] font-semibold"
-                                  : "w-7 h-7 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-[11px]"
-                              }>
-                                {getInitials(m.name)}
-                              </div>
-                              <div>
-                                <div className={
-                                  idx === 0
-                                    ? "font-semibold text-slate-50 text-sm"
-                                    : "font-medium text-slate-100 text-xs sm:text-sm"
-                                }>
-                                  #{idx + 1} · {m.name}
-                                </div>
-                                <div className="text-[11px] text-slate-400">
-                                  Total created
-                                </div>
-                              </div>
-                            </div>
+                {/* Overall - Top 3 horizontal */}
+                <div>
+                  <p className="text-[11px] uppercase tracking-[0.2em] text-emerald-300 mb-3">
+                    Overall · Top 3
+                  </p>
+                  {top3TotalCreated.length === 0 ? (
+                    <p className="text-slate-400 text-sm">No data</p>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {top3TotalCreated.map((m, idx) => (
+                        <div
+                          key={m.id || `overall-${idx}`}
+                          className={
+                            idx === 0
+                              ? "rounded-2xl bg-slate-900/80 border border-emerald-500/70 px-4 py-3 flex flex-col justify-between"
+                              : "rounded-xl bg-slate-900/50 border border-slate-700/80 px-3 py-2.5 flex flex-col justify-between"
+                          }
+                        >
+                          <div className="flex items-center gap-2.5 mb-2">
                             <div className={
                               idx === 0
-                                ? "text-xl font-extrabold text-emerald-300"
-                                : "text-base font-bold text-emerald-200"
+                                ? "w-9 h-9 rounded-full bg-emerald-500/25 border border-emerald-400/80 flex items-center justify-center text-xs font-semibold"
+                                : "w-7 h-7 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-[11px]"
                             }>
-                              {m.totalCreated || 0}
+                              {getInitials(m.name)}
+                            </div>
+                            <div>
+                              <div className={
+                                idx === 0
+                                  ? "font-semibold text-slate-50 text-base sm:text-lg"
+                                  : "font-medium text-slate-100 text-xs sm:text-sm"
+                              }>
+                                #{idx + 1} · {m.name}
+                              </div>
+                              <div className="text-[11px] text-slate-400">
+                                Total created
+                              </div>
                             </div>
                           </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                          <div className={
+                            idx === 0
+                              ? "text-2xl sm:text-3xl font-extrabold text-emerald-300 text-right"
+                              : "text-lg font-bold text-emerald-200 text-right"
+                          }>
+                            {m.totalCreated || 0}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
 
               {/* Overall Progress - SECONDARY */}
-              <div className="bg-slate-900/60 border border-slate-800 rounded-2xl shadow-2xl p-5 sm:p-7 flex flex-col gap-4">
+              <div className="bg-slate-900/60 border border-slate-800 rounded-2xl shadow-2xl p-5 sm:p-7 flex flex-col gap-5">
                 <div className="flex items-center justify-between gap-3 mb-1">
                   <div>
                     <h2 className="text-xl sm:text-2xl font-semibold text-slate-50 flex items-center gap-2">
@@ -393,7 +391,7 @@
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4">
                   {/* Created progress */}
                   <div className="p-3 sm:p-4 rounded-xl bg-sky-950/60 border border-sky-900/60">
                     <div className="flex items-center justify-between mb-2">
