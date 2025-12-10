@@ -1,10 +1,20 @@
 {
+  "lastUpdated": "2025-12-10T07:54:17.633Z",
+  "updatedBy": "Ramdas",
+  "weekInfo": {
+    "from": "2025-12-12",
+    "to": "2025-12-18"
+  },
+  "goals": {
+    "targetCreated": 175,
+    "targetApproved": 150,
+    "deadline": "Dec 31, 2025"
+  },
   "team": [
     {
       "id": 1,
       "name": "Divya",
       "todayCreated": 0,
-      "todayApproved": 0,
       "totalCreated": 10,
       "totalApproved": 10
     },
@@ -12,7 +22,6 @@
       "id": 2,
       "name": "Sahana",
       "todayCreated": 4,
-      "todayApproved": 2,
       "totalCreated": 34,
       "totalApproved": 15
     },
@@ -20,16 +29,13 @@
       "id": 3,
       "name": "Samhitha",
       "todayCreated": 3,
-      "todayApproved": 1,
       "totalCreated": 19,
-      "totalApproved": 13,
-      "weekCreated": 1
+      "totalApproved": 13
     },
     {
       "id": 4,
       "name": "Praveen",
       "todayCreated": 0,
-      "todayApproved": 0,
       "totalCreated": 0,
       "totalApproved": 0
     },
@@ -37,7 +43,6 @@
       "id": 5,
       "name": "Santhosh R",
       "todayCreated": 0,
-      "todayApproved": 0,
       "totalCreated": 0,
       "totalApproved": 0
     },
@@ -45,7 +50,6 @@
       "id": 6,
       "name": "Hemant",
       "todayCreated": 0,
-      "todayApproved": 0,
       "totalCreated": 12,
       "totalApproved": 10
     },
@@ -53,7 +57,6 @@
       "id": 7,
       "name": "Govind",
       "todayCreated": 0,
-      "todayApproved": 0,
       "totalCreated": 1,
       "totalApproved": 0
     },
@@ -61,7 +64,6 @@
       "id": 8,
       "name": "Saad",
       "todayCreated": 0,
-      "todayApproved": 0,
       "totalCreated": 0,
       "totalApproved": 0
     },
@@ -69,7 +71,6 @@
       "id": 9,
       "name": "Rajpaul",
       "todayCreated": 0,
-      "todayApproved": 0,
       "totalCreated": 12,
       "totalApproved": 10
     },
@@ -77,14 +78,8 @@
       "id": 10,
       "name": "Sharanya",
       "todayCreated": 0,
-      "todayApproved": 0,
       "totalCreated": 2,
       "totalApproved": 2
     }
-  ],
-  "goals": {
-    "targetCreated": 175,
-    "targetApproved": 90,
-    "deadline": "Dec 31, 2025"
-  }
+  ]
 }
