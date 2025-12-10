@@ -236,7 +236,7 @@
             )}
 
             {/* Top row: Hall of Fame primary, Progress secondary */}
-            <div className="grid grid-cols-1 lg:grid-cols-[1.9fr,1.1fr] gap-5 lg:gap-6 mb-6">
+            <div className="grid grid-cols-1 lg:grid-cols-[2.2fr,0.8fr] gap-5 lg:gap-6 mb-6">
               {/* Weekly Hall of Fame - PRIMARY */}
               <div className="bg-slate-900/60 border border-slate-800 rounded-2xl shadow-2xl p-5 sm:p-7 flex flex-col gap-5">
                 <div className="flex items-start justify-between">
@@ -245,7 +245,7 @@
                       <Medal />
                     </span>
                     <div>
-                      <h2 className="text-xl sm:text-2xl font-semibold text-slate-50">
+                      <h2 className="text-2xl sm:text-3xl font-semibold text-slate-50">
                         Weekly Hall of Fame
                       </h2>
                       <p className="text-[11px] sm:text-xs text-slate-400 mt-1">
@@ -276,14 +276,14 @@
                           key={m.id || `week-${idx}`}
                           className={
                             idx === 0
-                              ? "rounded-2xl bg-slate-900/80 border border-sky-500/70 px-4 py-3 flex flex-col justify-between"
-                              : "rounded-xl bg-slate-900/50 border border-slate-700/80 px-3 py-2.5 flex flex-col justify-between"
+                              ? "rounded-2xl bg-slate-900/80 border border-sky-500/70 px-4 py-4 flex flex-col justify-between"
+                              : "rounded-xl bg-slate-900/50 border border-slate-700/80 px-3 py-3 flex flex-col justify-between"
                           }
                         >
                           <div className="flex items-center gap-2.5 mb-2">
                             <div className={
                               idx === 0
-                                ? "w-9 h-9 rounded-full bg-sky-500/25 border border-sky-400/80 flex items-center justify-center text-xs font-semibold"
+                                ? "w-10 h-10 rounded-full bg-sky-500/25 border border-sky-400/80 flex items-center justify-center text-sm font-semibold"
                                 : "w-7 h-7 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-[11px]"
                             }>
                               {getInitials(m.name)}
@@ -291,7 +291,7 @@
                             <div>
                               <div className={
                                 idx === 0
-                                  ? "font-semibold text-slate-50 text-base sm:text-lg"
+                                  ? "font-semibold text-slate-50 text-base sm:text-xl"
                                   : "font-medium text-slate-100 text-xs sm:text-sm"
                               }>
                                 #{idx + 1} · {m.name}
@@ -303,8 +303,8 @@
                           </div>
                           <div className={
                             idx === 0
-                              ? "text-2xl sm:text-3xl font-extrabold text-sky-300 text-right"
-                              : "text-lg font-bold text-sky-200 text-right"
+                              ? "text-3xl sm:text-4xl font-extrabold text-sky-300 text-right"
+                              : "text-xl font-bold text-sky-200 text-right"
                           }>
                             {m.todayCreated || 0}
                           </div>
@@ -328,14 +328,14 @@
                           key={m.id || `overall-${idx}`}
                           className={
                             idx === 0
-                              ? "rounded-2xl bg-slate-900/80 border border-emerald-500/70 px-4 py-3 flex flex-col justify-between"
-                              : "rounded-xl bg-slate-900/50 border border-slate-700/80 px-3 py-2.5 flex flex-col justify-between"
+                              ? "rounded-2xl bg-slate-900/80 border border-emerald-500/70 px-4 py-4 flex flex-col justify-between"
+                              : "rounded-xl bg-slate-900/50 border border-slate-700/80 px-3 py-3 flex flex-col justify-between"
                           }
                         >
                           <div className="flex items-center gap-2.5 mb-2">
                             <div className={
                               idx === 0
-                                ? "w-9 h-9 rounded-full bg-emerald-500/25 border border-emerald-400/80 flex items-center justify-center text-xs font-semibold"
+                                ? "w-10 h-10 rounded-full bg-emerald-500/25 border border-emerald-400/80 flex items-center justify-center text-sm font-semibold"
                                 : "w-7 h-7 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-[11px]"
                             }>
                               {getInitials(m.name)}
@@ -343,7 +343,7 @@
                             <div>
                               <div className={
                                 idx === 0
-                                  ? "font-semibold text-slate-50 text-base sm:text-lg"
+                                  ? "font-semibold text-slate-50 text-base sm:text-xl"
                                   : "font-medium text-slate-100 text-xs sm:text-sm"
                               }>
                                 #{idx + 1} · {m.name}
@@ -355,8 +355,8 @@
                           </div>
                           <div className={
                             idx === 0
-                              ? "text-2xl sm:text-3xl font-extrabold text-emerald-300 text-right"
-                              : "text-lg font-bold text-emerald-200 text-right"
+                              ? "text-3xl sm:text-4xl font-extrabold text-emerald-300 text-right"
+                              : "text-xl font-bold text-emerald-200 text-right"
                           }>
                             {m.totalCreated || 0}
                           </div>
@@ -369,7 +369,7 @@
 
               {/* Overall Progress - SECONDARY */}
               <div className="bg-slate-900/60 border border-slate-800 rounded-2xl shadow-2xl p-5 sm:p-7 flex flex-col gap-5">
-                <div className="flex items-center justify-between gap-3 mb-1">
+                <div className="flex items-start gap-3 mb-1">
                   <div>
                     <h2 className="text-xl sm:text-2xl font-semibold text-slate-50 flex items-center gap-2">
                       Overall Progress
@@ -381,13 +381,6 @@
                     <p className="text-xs sm:text-sm text-slate-400 mt-1">
                       Tracking script creation and approvals vs release targets.
                     </p>
-                  </div>
-                  <div className="hidden sm:flex flex-col items-end text-xs text-slate-400">
-                    <span className="font-medium text-sky-300">{getWeekLabel()}</span>
-                    <span>
-                      This week created:{" "}
-                      <span className="text-sky-300 font-semibold">{weekCreated}</span>
-                    </span>
                   </div>
                 </div>
 
