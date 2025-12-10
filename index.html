@@ -153,7 +153,10 @@
       };
 
       const totalCreated   = teamData.reduce((s, m) => s + (m.totalCreated   || 0), 0);
-      const totalApproved  = teamData.reduce((s, m) => s + (m.totalApproved  || 0), 0);
+      // Use goals.currentApproved if present, otherwise fall back to old per-member totalApproved
+      const totalApproved = goalData.currentApproved != null && goalData.currentApproved !== ""
+        ? Number(goalData.currentApproved)
+        : teamData.reduce((s, m) => s + (m.totalApproved || 0), 0);
       const weekCreated    = teamData.reduce((s, m) => s + (m.todayCreated   || 0), 0);   // "today" = weekly
 
       const remainingCreated  = Math.max((goalData.targetCreated  || 0) - totalCreated, 0);
