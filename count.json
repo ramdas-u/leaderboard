@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-10T10:19:09.759Z",
+  "lastUpdated": "2025-12-10T10:22:22.099Z",
   "updatedBy": "Ramdas",
   "weekInfo": {
     "from": "2025-12-05",
@@ -28,7 +28,7 @@
       "id": 3,
       "name": "Samhitha",
       "todayCreated": 1,
-      "totalCreated": 19
+      "totalCreated": 14
     },
     {
       "id": 4,
@@ -64,13 +64,13 @@
       "id": 9,
       "name": "Rajpaul",
       "todayCreated": 1,
-      "totalCreated": 2
+      "totalCreated": 4
     },
     {
       "id": 10,
       "name": "Sharanya",
       "todayCreated": 1,
-      "totalCreated": 2
+      "totalCreated": 13
     }
   ]
 }
