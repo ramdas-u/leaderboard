@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-11T11:39:12.125Z",
+  "lastUpdated": "2025-12-16T08:09:18.637Z",
   "updatedBy": "Divya",
   "weekInfo": {
     "from": "2025-12-11",
@@ -16,61 +16,84 @@
       "id": 1,
       "name": "Divya",
       "todayCreated": 1,
-      "totalCreated": 11
+      "totalCreated": 11,
+      "totalApproved": 0
     },
     {
       "id": 2,
       "name": "Sahana",
       "todayCreated": 4,
-      "totalCreated": 44
+      "totalCreated": 44,
+      "totalApproved": 0
     },
     {
       "id": 3,
       "name": "Samhitha",
       "todayCreated": 3,
-      "totalCreated": 33
+      "totalCreated": 33,
+      "totalApproved": 0
     },
     {
       "id": 4,
       "name": "Praveen",
       "todayCreated": 1,
-      "totalCreated": 2
+      "totalCreated": 2,
+      "totalApproved": 0
     },
     {
       "id": 5,
       "name": "Santhosh R",
       "todayCreated": 6,
-      "totalCreated": 7
+      "totalCreated": 7,
+      "totalApproved": 0
     },
     {
       "id": 6,
       "name": "Hemant",
       "todayCreated": 2,
-      "totalCreated": 18
+      "totalCreated": 18,
+      "totalApproved": 0
     },
     {
       "id": 7,
       "name": "Govind",
       "todayCreated": 0,
-      "totalCreated": 1
+      "totalCreated": 1,
+      "totalApproved": 0
     },
     {
       "id": 8,
       "name": "Saad",
       "todayCreated": 0,
-      "totalCreated": 0
+      "totalCreated": 0,
+      "totalApproved": 0
     },
     {
       "id": 9,
       "name": "Rajpaul",
       "todayCreated": 2,
-      "totalCreated": 17
+      "totalCreated": 17,
+      "totalApproved": 0
     },
     {
       "id": 10,
       "name": "Sharanya",
       "todayCreated": 3,
-      "totalCreated": 17
+      "totalCreated": 17,
+      "totalApproved": 0
     }
-  ]
+  ],
+  "developed": {
+    "totalDeveloped": 150
+  },
+  "touchpoints": {
+    "mobile": {
+      "name": "Govind",
+      "finished": 25
+    },
+    "magiqa": {
+      "name": "Saad",
+      "finished": 5
+    }
+  }
 }
