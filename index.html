@@ -274,7 +274,9 @@ function timeAgo(date) {
 }
 
 async function loadData() {
-  const res = await fetch('./count.json?_=' + Date.now());
+  const res = await fetch('./count.json?_=' + Date.now(), {
+  cache: "no-store"
+  });
   const data = await res.json();
 
   /* TIME AGO */
@@ -315,14 +317,6 @@ async function loadData() {
   el('magiqa-name').textContent = magiqa.name || '—';
   el('magiqa-finished').textContent = n(magiqa.finished);
 
-  /* BADGES */
-  el('mobile-badge').innerHTML =
-    mobile.name?.toLowerCase() === "govind"
-      ? '<span class="lead-badge">LEAD</span>' : '';
-
-  el('magiqa-badge').innerHTML =
-    magiqa.name?.toLowerCase() === "saad"
-      ? '<span class="lead-badge">LEAD</span>' : '';
 
   /* DEVELOPED TOTAL */
   el('developed-total').textContent =
