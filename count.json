@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-16T08:17:41.686Z",
+  "lastUpdated": "2025-12-16T10:56:38.127Z",
   "updatedBy": "Ramdas",
   "weekInfo": {
     "from": "2025-12-11",
@@ -57,14 +57,14 @@
     {
       "id": 7,
       "name": "Govind",
-      "todayCreated": 0,
+      "todayCreated": 25,
       "totalCreated": 1,
       "totalApproved": 0
     },
     {
       "id": 8,
       "name": "Saad",
-      "todayCreated": 0,
+      "todayCreated": 6,
       "totalCreated": 0,
       "totalApproved": 0
     },
@@ -93,7 +93,7 @@
     },
     "magiqa": {
       "name": "Saad",
-      "finished": 5
+      "finished": 6
     }
   }
 }
