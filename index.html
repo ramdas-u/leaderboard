@@ -19,11 +19,11 @@
       border-radius: 14px;
       padding: 20px;
     }
-    .big-number { font-size: 38px; font-weight: 700; color:#7ee6c9; }
-    .big-number-blue { font-size: 38px; font-weight: 700; color:#7ec7ff; }
+    .big-number { font-size: 40px; font-weight: 700; color:#7ee6c9; }
+    .big-number-blue { font-size: 40px; font-weight: 700; color:#7ec7ff; }
     .muted { color:#9fb0c8; }
     .avatar {
-      width: 36px; height: 36px;
+      width: 38px; height: 38px;
       border-radius: 50%;
       background:#0f1b2e;
       border:1px solid #1f2d40;
@@ -32,14 +32,38 @@
     }
 
     /* Top-3 name hierarchy */
-    .top1-name { font-size:1.5rem; font-weight:800; }
-    .top2-name { font-size:1.25rem; font-weight:700; }
-    .top3-name { font-size:1.15rem; font-weight:600; }
+    .top1-name { font-size: 2.2rem; font-weight: 800; }
+    .top2-name { font-size: 1.55rem; font-weight: 700; }
+    .top3-name { font-size: 1.35rem; font-weight: 600; }
+
+    /* Animate #1 performer */
+    .top1-animate {
+      animation: pulse1 2.8s infinite ease-in-out;
+    }
+    @keyframes pulse1 {
+      0% { opacity: 1; }
+      50% { opacity: 0.55; }
+      100% { opacity: 1; }
+    }
 
     /* Touchpoint names */
-    .tp-name { font-size:1.35rem; font-weight:700; }
+    .tp-name { font-size: 1.75rem; font-weight: 800; }
 
-    /* Tiny invisible animation to prevent Fire TV display sleep */
+    /* Touchpoint headings bigger */
+    .tp-title { font-size: 1.1rem; font-weight: 600; }
+
+    /* LEAD badge */
+    .lead-badge {
+      background: #1ED760;
+      color: black;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 7px;
+      border-radius: 6px;
+      margin-left: 8px;
+    }
+
+    /* Invisible movement to keep Fire TV alive */
     #keepalive-dot {
       position: fixed;
       width: 3px; height: 3px;
@@ -47,273 +71,312 @@
       top: 0; left: 0;
       animation: moveDot 12s infinite linear;
       pointer-events:none;
-      opacity:0; /* fully invisible */
+      opacity:0;
     }
     @keyframes moveDot {
-      0% { transform: translate(0px,0px); }
-      25% { transform: translate(20px,5px); }
-      50% { transform: translate(40px,0px); }
-      75% { transform: translate(20px,-5px); }
-      100% { transform: translate(0px,0px); }
+      0% { transform: translate(0,0); }
+      25% { transform: translate(15px,4px); }
+      50% { transform: translate(30px,0px); }
+      75% { transform: translate(15px,-4px); }
+      100% { transform: translate(0,0); }
     }
   </style>
 </head>
 
 <body>
-  <div id="keepalive-dot"></div>
+<div id="keepalive-dot"></div>
 
-  <div class="max-w-7xl mx-auto p-8">
+<div class="max-w-7xl mx-auto p-8">
 
-    <header class="mb-10">
-      <h1 class="text-4xl font-extrabold">Automation Squad Leaderboard</h1>
-      <p class="muted mt-1">Live view of script creation & approvals across the team</p>
-    </header>
+  <header class="mb-10">
+    <h1 class="text-4xl font-extrabold">Automation Squad Leaderboard</h1>
+    <p class="muted mt-1">Live view of script creation & approvals across the team</p>
+    <p class="text-xs text-slate-400 mt-1" id="last-updated-ago">Last updated: —</p>
+  </header>
 
-    <main class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <main class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-      <section class="lg:col-span-2 space-y-8">
+    <!-- LEFT -->
+    <section class="lg:col-span-2 space-y-8">
 
-        <!-- WEEKLY HALL OF FAME -->
-        <div class="card">
-          <div class="flex justify-between items-start">
-            <div>
-              <h2 class="text-2xl font-bold">Weekly Hall of Fame</h2>
-              <p class="muted">Weekly and overall champions based on script creation.</p>
-            </div>
-            <div class="muted text-sm" id="week-range"></div>
+      <!-- WEEKLY HALL OF FAME -->
+      <div class="card">
+        <div class="flex justify-between items-start">
+          <div>
+            <h2 class="text-2xl font-bold">Weekly Hall of Fame</h2>
+            <p class="muted">Weekly and overall champions based on script creation.</p>
           </div>
+          <div class="muted text-sm" id="week-range"></div>
+        </div>
 
-          <div class="mt-6">
-            <div class="text-xs text-sky-300 uppercase tracking-wide mb-2">This Week · Top 3</div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="mt-6">
+          <div class="text-xs text-sky-300 uppercase tracking-wide mb-2">This Week · Top 3</div>
 
-              <div class="card flex items-center justify-between">
-                <div>
-                  <div class="bg-white/5 px-2 py-1 rounded text-sm">
-                    #1 · <span id="week1-name" class="top1-name">—</span>
-                  </div>
-                  <div class="muted text-xs mt-2">Created this week</div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+            <!-- #1 -->
+            <div class="card flex items-center justify-between">
+              <div>
+                <div class="bg-white/5 px-2 py-1 rounded text-sm">
+                  #1 · <span id="week1-name" class="top1-name top1-animate">—</span>
                 </div>
-                <div class="big-number-blue" id="week1-count">0</div>
+                <div class="muted text-xs mt-2">Created this week</div>
               </div>
-
-              <div class="card flex items-center justify-between">
-                <div>
-                  <div class="bg-white/5 px-2 py-1 rounded text-sm">
-                    #2 · <span id="week2-name" class="top2-name">—</span>
-                  </div>
-                  <div class="muted text-xs mt-2">Created this week</div>
-                </div>
-                <div class="big-number-blue" id="week2-count">0</div>
-              </div>
-
-              <div class="card flex items-center justify-between">
-                <div>
-                  <div class="bg-white/5 px-2 py-1 rounded text-sm">
-                    #3 · <span id="week3-name" class="top3-name">—</span>
-                  </div>
-                  <div class="muted text-xs mt-2">Created this week</div>
-                </div>
-                <div class="big-number-blue" id="week3-count">0</div>
-              </div>
-
+              <div class="big-number-blue" id="week1-count">0</div>
             </div>
-          </div>
 
-          <!-- TOUCHPOINT AUTOMATION -->
-          <div class="mt-10">
-            <div class="text-xs text-sky-300 uppercase tracking-wide mb-2">Touchpoint Automation</div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-              <div class="card">
-                <div class="muted text-xs">Mobile</div>
-                <div class="tp-name mt-1" id="mobile-name">—</div>
-                <div class="mt-4 flex items-end justify-between">
-                  <span class="muted text-sm">Scripts finished</span>
-                  <span class="big-number" id="mobile-finished">0</span>
+            <!-- #2 -->
+            <div class="card flex items-center justify-between">
+              <div>
+                <div class="bg-white/5 px-2 py-1 rounded text-sm">
+                  #2 · <span id="week2-name" class="top2-name">—</span>
                 </div>
+                <div class="muted text-xs mt-2">Created this week</div>
               </div>
-
-              <div class="card">
-                <div class="muted text-xs">MagiQA</div>
-                <div class="tp-name mt-1" id="magiqa-name">—</div>
-                <div class="mt-4 flex items-end justify-between">
-                  <span class="muted text-sm">Scripts finished</span>
-                  <span class="big-number" id="magiqa-finished">0</span>
-                </div>
-              </div>
-
-              <div class="card">
-                <div class="muted text-xs">Developed</div>
-                <div class="text-lg font-semibold mt-1">Total</div>
-                <div class="mt-4 flex items-end justify-between">
-                  <span class="muted text-sm">Scripts developed</span>
-                  <span class="big-number" id="developed-total">0</span>
-                </div>
-              </div>
-
+              <div class="big-number-blue" id="week2-count">0</div>
             </div>
+
+            <!-- #3 -->
+            <div class="card flex items-center justify-between">
+              <div>
+                <div class="bg-white/5 px-2 py-1 rounded text-sm">
+                  #3 · <span id="week3-name" class="top3-name">—</span>
+                </div>
+                <div class="muted text-xs mt-2">Created this week</div>
+              </div>
+              <div class="big-number-blue" id="week3-count">0</div>
+            </div>
+
           </div>
         </div>
 
-        <!-- SQUAD BREAKDOWN -->
-        <div class="card">
-          <div class="flex justify-between items-start mb-4">
-            <div>
-              <h2 class="text-xl font-bold">Squad Breakdown</h2>
-              <p class="muted text-sm">Each row represents one squad member's contribution.</p>
-            </div>
-            <div class="muted text-sm" id="week-range-2"></div>
-          </div>
+        <!-- TOUCHPOINT AUTOMATION -->
+        <div class="mt-10">
+          <div class="text-xs text-sky-300 uppercase tracking-wide mb-2">Touchpoint Automation</div>
 
-          <table class="w-full text-left">
-            <thead>
-              <tr class="text-slate-400 text-xs uppercase tracking-wide border-b border-slate-700">
-                <th class="py-2">Member</th>
-                <th class="py-2 text-right">This Week Created</th>
-              </tr>
-            </thead>
-            <tbody id="breakdown-body"></tbody>
-          </table>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+            <!-- MOBILE -->
+            <div class="card">
+              <div class="tp-title">Mobile</div>
+              <div class="tp-name mt-1" id="mobile-name">—</div>
+              <div id="mobile-badge"></div>
+
+              <div class="mt-4 flex items-end justify-between">
+                <span class="muted text-sm">Scripts finished</span>
+                <span class="big-number" id="mobile-finished">0</span>
+              </div>
+            </div>
+
+            <!-- MAGIQA -->
+            <div class="card">
+              <div class="tp-title">MagiQA</div>
+              <div class="tp-name mt-1" id="magiqa-name">—</div>
+              <div id="magiqa-badge"></div>
+
+              <div class="mt-4 flex items-end justify-between">
+                <span class="muted text-sm">Scripts finished</span>
+                <span class="big-number" id="magiqa-finished">0</span>
+              </div>
+            </div>
+
+            <!-- DEVELOPED -->
+            <div class="card">
+              <div class="tp-title">Developed</div>
+              <div class="text-lg font-semibold mt-1">Total</div>
+              <div class="mt-4 flex items-end justify-between">
+                <span class="muted text-sm">Scripts developed</span>
+                <span class="big-number" id="developed-total">0</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- BREAKDOWN -->
+      <div class="card">
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <h2 class="text-xl font-bold">Squad Breakdown</h2>
+            <p class="muted text-sm">Individual contributions this week.</p>
+          </div>
+          <div class="muted text-sm" id="week-range-2"></div>
         </div>
 
-      </section>
+        <table class="w-full text-left">
+          <thead>
+            <tr class="text-slate-400 text-xs uppercase tracking-wide border-b border-slate-700">
+              <th class="py-2">Member</th>
+              <th class="py-2 text-right">This Week Created</th>
+            </tr>
+          </thead>
+          <tbody id="breakdown-body"></tbody>
+        </table>
+      </div>
+    </section>
 
-      <aside class="space-y-6">
+    <!-- RIGHT SIDE -->
+    <aside class="space-y-6">
 
-        <!-- RELEASE TARGET -->
-        <div>
-          <div class="text-xs text-cyan-300 font-medium uppercase tracking-wider">Release Target</div>
-          <div class="mt-2 text-sm">Scripts Created: <span id="rt-created">0 / 0</span></div>
-          <div class="mt-1 text-sm">Scripts Approved: <span id="rt-approved">0 / 0</span></div>
-          <div class="muted text-xs mt-2">Target by <span id="rt-deadline">—</span></div>
+      <!-- RELEASE TARGET -->
+      <div>
+        <div class="text-xs text-cyan-300 font-medium uppercase tracking-wider">Release Target</div>
+        <div class="mt-2 text-sm">Scripts Created: <span id="rt-created">0 / 0</span></div>
+        <div class="mt-1 text-sm">Scripts Approved: <span id="rt-approved">0 / 0</span></div>
+        <div class="muted text-xs mt-2">Target by <span id="rt-deadline">—</span></div>
+      </div>
+
+      <!-- OVERALL PROGRESS -->
+      <div class="card">
+        <h3 class="text-lg font-semibold">Overall Progress • Live</h3>
+        <p class="muted text-sm mt-1">Tracking script creation and approvals vs release targets.</p>
+
+        <div class="mt-4 border rounded-lg p-3 bg-gradient-to-r from-sky-800/30 to-cyan-800/10">
+          <div class="muted text-xs uppercase tracking-wide">Created</div>
+          <div class="flex items-baseline justify-between mt-1">
+            <div class="text-lg font-semibold" id="created-numbers">0 / 0</div>
+            <div class="text-2xl font-bold text-sky-300" id="created-percent">0%</div>
+          </div>
+          <div class="mt-3 h-3 bg-slate-800 rounded-full overflow-hidden">
+            <div id="created-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#61dafb,#7ee6c9);"></div>
+          </div>
+          <div class="muted text-xs mt-2" id="created-more"></div>
         </div>
 
-        <!-- OVERALL PROGRESS -->
-        <div class="card">
-          <h3 class="text-lg font-semibold">Overall Progress • Live</h3>
-          <p class="muted text-sm mt-1">Tracking script creation and approvals vs release targets.</p>
-
-          <div class="mt-4 border rounded-lg p-3 bg-gradient-to-r from-sky-800/30 to-cyan-800/10">
-            <div class="muted text-xs uppercase tracking-wide">Created</div>
-            <div class="flex items-baseline justify-between mt-1">
-              <div class="text-lg font-semibold" id="created-numbers">0 / 0</div>
-              <div class="text-2xl font-bold text-sky-300" id="created-percent">0%</div>
-            </div>
-            <div class="mt-3 h-3 bg-slate-800 rounded-full overflow-hidden">
-              <div id="created-bar" style="height:100%; width:0%; background:linear-gradient(90deg,#61dafb,#7ee6c9);"></div>
-            </div>
-            <div class="muted text-xs mt-2" id="created-more"></div>
+        <div class="mt-4 border rounded-lg p-3 bg-gradient-to-r from-emerald-800/30 to-green-800/10">
+          <div class="muted text-xs uppercase tracking-wide">Approved (Overall)</div>
+          <div class="flex items-baseline justify-between mt-1">
+            <div class="text-lg font-semibold" id="approved-numbers">0 / 0</div>
+            <div class="text-2xl font-bold text-emerald-300" id="approved-percent">0%</div>
           </div>
-
-          <div class="mt-4 border rounded-lg p-3 bg-gradient-to-r from-emerald-800/30 to-green-800/10">
-            <div class="muted text-xs uppercase tracking-wide">Approved (Overall)</div>
-            <div class="flex items-baseline justify-between mt-1">
-              <div class="text-lg font-semibold" id="approved-numbers">0 / 0</div>
-              <div class="text-2xl font-bold text-emerald-300" id="approved-percent">0%</div>
-            </div>
-            <div class="mt-3 h-3 bg-slate-800 rounded-full overflow-hidden">
-              <div id="approved-bar" style="height:100%; width:0%; background:linear-gradient(90deg,#7ee6c9,#2ec4b6);"></div>
-            </div>
-            <div class="muted text-xs mt-2" id="approved-more"></div>
+          <div class="mt-3 h-3 bg-slate-800 rounded-full overflow-hidden">
+            <div id="approved-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#7ee6c9,#2ec4b6);"></div>
           </div>
-
+          <div class="muted text-xs mt-2" id="approved-more"></div>
         </div>
 
-      </aside>
-    </main>
+      </div>
+    </aside>
+  </main>
+</div>
 
-  </div>
+<script>
+const el = id => document.getElementById(id);
+const n = v => Number(v) || 0;
 
-  <script>
-    const el = id => document.getElementById(id);
-    const n = v => Number(v) || 0;
+/* TIME AGO */
+function timeAgo(date) {
+  const diff = (Date.now() - new Date(date).getTime()) / 60000;
+  if (diff < 1) return "Just now";
+  if (diff < 60) return Math.floor(diff) + " mins ago";
+  return Math.floor(diff/60) + " hours ago";
+}
 
-    async function loadData() {
-      const res = await fetch('./count.json?_=' + Date.now());
-      const data = await res.json();
+async function loadData() {
+  const res = await fetch('./count.json?_=' + Date.now());
+  const data = await res.json();
 
-      /* WEEK */
-      if (data.weekInfo) {
-        const t = `Week: ${data.weekInfo.from || '—'} – ${data.weekInfo.to || '—'}`;
-        el('week-range').textContent = t;
-        el('week-range-2').textContent = t;
-      }
+  /* TIME AGO */
+  if (data.lastUpdated) {
+    el('last-updated-ago').textContent =
+      "Last updated: " + timeAgo(data.lastUpdated);
+  }
 
-      const team = Array.isArray(data.team) ? data.team : [];
-      const sorted = team.slice().sort((a,b) => n(b.todayCreated) - n(a.todayCreated));
+  /* WEEK RANGE */
+  if (data.weekInfo) {
+    const txt = `Week: ${data.weekInfo.from || '—'} – ${data.weekInfo.to || '—'}`;
+    el('week-range').textContent = txt;
+    el('week-range-2').textContent = txt;
+  }
 
-      /* TOP 3 */
-      const top = sorted;
-      el('week1-name').textContent = top[0]?.name || '—';
-      el('week1-count').textContent = n(top[0]?.todayCreated);
+  const team = Array.isArray(data.team) ? data.team : [];
+  const sorted = team.slice().sort((a,b) => n(b.todayCreated) - n(a.todayCreated));
 
-      el('week2-name').textContent = top[1]?.name || '—';
-      el('week2-count').textContent = n(top[1]?.todayCreated);
+  /* TOP 3 */
+  const top = sorted;
+  el('week1-name').textContent = top[0]?.name || '—';
+  el('week1-count').textContent = n(top[0]?.todayCreated);
 
-      el('week3-name').textContent = top[2]?.name || '—';
-      el('week3-count').textContent = n(top[2]?.todayCreated);
+  el('week2-name').textContent = top[1]?.name || '—';
+  el('week2-count').textContent = n(top[1]?.todayCreated);
 
-      /* TOUCHPOINT */
-      const mobile = data.touchpoints?.mobile || {};
-      const magiqa = data.touchpoints?.magiqa || {};
-      const developed = n(data.developed?.totalDeveloped);
+  el('week3-name').textContent = top[2]?.name || '—';
+  el('week3-count').textContent = n(top[2]?.todayCreated);
 
-      el('mobile-name').textContent = mobile.name || '—';
-      el('mobile-finished').textContent = n(mobile.finished);
-      el('magiqa-name').textContent = magiqa.name || '—';
-      el('magiqa-finished').textContent = n(magiqa.finished);
+  /* TOUCHPOINT */
+  const mobile = data.touchpoints?.mobile || {};
+  const magiqa = data.touchpoints?.magiqa || {};
+  const developed = n(data.developed?.totalDeveloped);
 
-      const totalDev = developed + n(mobile.finished) + n(magiqa.finished);
-      el('developed-total').textContent = totalDev;
+  el('mobile-name').textContent = mobile.name || '—';
+  el('mobile-finished').textContent = n(mobile.finished);
 
-      /* BREAKDOWN TABLE */
-      const tbody = el('breakdown-body');
-      tbody.innerHTML = "";
-      sorted.forEach(m => {
-        const tr = document.createElement('tr');
-        tr.className = "border-b border-slate-800";
+  el('magiqa-name').textContent = magiqa.name || '—';
+  el('magiqa-finished').textContent = n(magiqa.finished);
 
-        tr.innerHTML = `
-          <td class="py-3 flex items-center gap-3">
-            <div class="avatar">${(m.name || 'N/A').slice(0,2).toUpperCase()}</div>
-            <span class="text-sm font-medium">${m.name || '—'}</span>
-          </td>
-          <td class="py-3 text-right font-semibold">${n(m.todayCreated)}</td>
-        `;
-        tbody.appendChild(tr);
-      });
+  /* BADGES */
+  el('mobile-badge').innerHTML =
+    mobile.name?.toLowerCase() === "govind"
+      ? '<span class="lead-badge">LEAD</span>' : '';
 
-      /* RELEASE TARGET */
-      const g = data.goals || {};
-      const totalCreated = sorted.reduce((s,m)=>s+n(m.totalCreated),0);
+  el('magiqa-badge').innerHTML =
+    magiqa.name?.toLowerCase() === "saad"
+      ? '<span class="lead-badge">LEAD</span>' : '';
 
-      el('rt-created').textContent = `${totalCreated} / ${n(g.targetCreated)}`;
-      el('rt-approved').textContent = `${n(g.currentApproved)} / ${n(g.targetApproved)}`;
-      el('rt-deadline').textContent = g.deadline || '—';
+  /* DEVELOPED TOTAL */
+  el('developed-total').textContent =
+    developed + n(mobile.finished) + n(magiqa.finished);
 
-      /* OVERALL PROGRESS */
-      const targetCreated = n(g.targetCreated);
-      const targetApproved = n(g.targetApproved);
+  /* BREAKDOWN */
+  const tbody = el('breakdown-body');
+  tbody.innerHTML = "";
 
-      el('created-numbers').textContent = `${totalCreated} / ${targetCreated}`;
-      const createdPct = targetCreated ? Math.round(totalCreated/targetCreated*100) : 0;
-      el('created-percent').textContent = createdPct + "%";
-      el('created-bar').style.width = Math.min(createdPct,100) + "%";
-      el('created-more').textContent = `${Math.max(0,targetCreated-totalCreated)} more scripts needed to hit created target.`;
+  sorted.forEach(m => {
+    const tr = document.createElement('tr');
+    tr.className = "border-b border-slate-800";
 
-      const approvedOverall = n(g.currentApproved);
-      el('approved-numbers').textContent = `${approvedOverall} / ${targetApproved}`;
-      const approvedPct = targetApproved ? Math.round(approvedOverall/targetApproved*100) : 0;
-      el('approved-percent').textContent = approvedPct + "%";
-      el('approved-bar').style.width = Math.min(approvedPct,100) + "%";
-      el('approved-more').textContent = `${Math.max(0,targetApproved-approvedOverall)} more scripts needed to hit approval target.`;
-    }
+    tr.innerHTML = `
+      <td class="py-3 flex items-center gap-3">
+        <div class="avatar">${(m.name || 'N/A').slice(0,2).toUpperCase()}</div>
+        <span class="text-sm font-medium">${m.name || '—'}</span>
+      </td>
+      <td class="py-3 text-right font-semibold">${n(m.todayCreated)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
 
-    loadData();
-    setInterval(loadData, 60000);
-  </script>
+  /* RELEASE TARGET */
+  const g = data.goals || {};
+  const totalCreated = sorted.reduce((s,m)=>s+n(m.totalCreated),0);
+
+  el('rt-created').textContent = `${totalCreated} / ${n(g.targetCreated)}`;
+  el('rt-approved').textContent = `${n(g.currentApproved)} / ${n(g.targetApproved)}`;
+  el('rt-deadline').textContent = g.deadline || '—';
+
+  /* OVERALL PROGRESS */
+  const targetCreated = n(g.targetCreated);
+  const targetApproved = n(g.targetApproved);
+
+  el('created-numbers').textContent = `${totalCreated} / ${targetCreated}`;
+  const createdPct = targetCreated ? Math.round(totalCreated/targetCreated*100) : 0;
+  el('created-percent').textContent = createdPct + "%";
+  el('created-bar').style.width = Math.min(createdPct,100) + "%";
+  el('created-more').textContent = Math.max(0,targetCreated-totalCreated) + 
+    " more scripts needed to hit created target.";
+
+  const approvedOverall = n(g.currentApproved);
+  el('approved-numbers').textContent = `${approvedOverall} / ${targetApproved}`;
+  const approvedPct = targetApproved ? Math.round(approvedOverall/targetApproved*100) : 0;
+  el('approved-percent').textContent = approvedPct + "%";
+  el('approved-bar').style.width = Math.min(approvedPct,100) + "%";
+  el('approved-more').textContent = Math.max(0,targetApproved-approvedOverall) + 
+    " more scripts needed to hit approval target.";
+}
+
+loadData();
+setInterval(loadData, 30000);
+</script>
 
 </body>
 </html>
