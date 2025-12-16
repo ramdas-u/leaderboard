@@ -1,279 +1,530 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Automation Squad Leaderboard</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <!-- Tailwind CDN - okay for local/dev. For production consider building Tailwind. -->
+  <!-- React & Babel -->
+  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
-    /* Minimal theme to match your dark dashboard */
-    body { background: linear-gradient(180deg,#071125 0%, #051021 100%); color: #e6eef8; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
-    .card { background: rgba(11,18,29,0.65); border: 1px solid rgba(120,140,160,0.08); border-radius: 14px; padding: 20px; }
-    .muted { color: #9fb0c8; }
-    .big-number { font-weight: 700; font-size: 36px; color: #7ee6c9; }
-    .big-number-alt { color: #7ec7ff; }
-    /* small visual fixes */
-    .pill { padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,0.02); color: #bcd7ef; font-size: 13px; display:inline-block; }
-    .hp { min-height: 120px; }
-    /* responsive */
-    @media (min-width: 1024px) {
-      .hp-lg { min-height: 150px; }
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      background: #020617;
     }
   </style>
 </head>
 <body>
-  <div class="max-w-7xl mx-auto p-8">
-    <header class="mb-8">
-      <h1 class="text-4xl font-extrabold">Automation Squad Leaderboard</h1>
-      <p class="muted mt-1">Live view of script creation & approvals across the team</p>
-    </header>
+  <div id="root"></div>
 
-    <main class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- Left: main leaderboard & Hall of Fame -->
-      <section class="lg:col-span-2 space-y-6">
-        <div class="card">
-          <div class="flex justify-between items-start">
-            <div>
-              <h2 class="text-2xl font-bold">Weekly Hall of Fame</h2>
-              <p class="muted mt-1">Weekly and overall champions based on script creation.</p>
-            </div>
-            <div class="muted text-sm" id="week-range">Week: —</div>
-          </div>
+  <script type="text/babel">
+    const { useState, useEffect } = React;
 
-          <!-- THIS WEEK TOP 3 -->
-          <div class="mt-6">
-            <div class="text-xs text-sky-300 uppercase tracking-wide mb-2">This week · Top 3</div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div class="hp card flex items-center justify-between">
-                <div>
-                  <div class="pill">#1 · <span id="week1-name">—</span></div>
-                  <div class="muted text-sm mt-1">Created this week</div>
-                </div>
-                <div class="big-number-alt" id="week1-count">0</div>
-              </div>
+    const Trophy = () => (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" strokeWidth="2">
+        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+        <path d="M4 22h16" />
+        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.85 7 20 7 21" />
+        <path d="M17 21c0-1-.85-2.15-2.03-2.79-.5-.23-.97-.66-.97-1.21v-2.34" />
+        <path d="M8 9h8v3a4 4 0 0 1-4 4 4 4 0 0 1-4-4V9Z" />
+        <path d="M12 17v5" />
+        <path d="M8 5V2h8v3" />
+      </svg>
+    );
 
-              <div class="hp card flex items-center justify-between">
-                <div>
-                  <div class="pill">#2 · <span id="week2-name">—</span></div>
-                  <div class="muted text-sm mt-1">Created this week</div>
-                </div>
-                <div class="big-number-alt" id="week2-count">0</div>
-              </div>
+    const Medal = () => (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" strokeWidth="2">
+        <circle cx="12" cy="8" r="4" />
+        <path d="M8.5 12.5 7 22l5-3 5 3-1.5-9.5" />
+      </svg>
+    );
 
-              <div class="hp card flex items-center justify-between">
-                <div>
-                  <div class="pill">#3 · <span id="week3-name">—</span></div>
-                  <div class="muted text-sm mt-1">Created this week</div>
-                </div>
-                <div class="big-number-alt" id="week3-count">0</div>
-              </div>
-            </div>
-          </div>
+    const AutomationLeaderboard = () => {
+      const [teamData, setTeamData] = useState([]);
+      const [goalData, setGoalData] = useState({
+        targetCreated: 0,
+        targetApproved: 0,
+        deadline: ""
+      });
+      const [weekInfo, setWeekInfo] = useState({ from: "", to: "" });
+      const [lastUpdated, setLastUpdated] = useState("");
+      const [updatedBy, setUpdatedBy] = useState("");
+      const [currentTime, setCurrentTime] = useState(new Date());
+      const [error, setError] = useState("");
 
-          <!-- REPLACED SECTION: MOBILE / MAGIQA / DEVELOPED -->
-          <div class="mt-6">
-            <div class="text-xs text-sky-300 uppercase tracking-wide mb-2">Touchpoint Automation</div>
+      const DATA_URL = "count.json";
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <!-- Mobile card -->
-              <div class="card hp-lg">
-                <div class="muted text-xs">Mobile</div>
-                <div class="text-lg font-semibold mt-1" id="mobile-name">—</div>
-                <div class="mt-4 flex items-end justify-between">
-                  <div class="muted text-sm">Scripts finished</div>
-                  <div class="big-number" id="mobile-finished">0</div>
-                </div>
-              </div>
-
-              <!-- MagiQA card -->
-              <div class="card hp-lg">
-                <div class="muted text-xs">MagiQA</div>
-                <div class="text-lg font-semibold mt-1" id="magiqa-name">—</div>
-                <div class="mt-4 flex items-end justify-between">
-                  <div class="muted text-sm">Scripts finished</div>
-                  <div class="big-number" id="magiqa-finished">0</div>
-                </div>
-              </div>
-
-              <!-- Developed total card -->
-              <div class="card hp-lg">
-                <div class="muted text-xs">Developed</div>
-                <div class="text-lg font-semibold mt-1">Total</div>
-                <div class="mt-4 flex items-end justify-between">
-                  <div class="muted text-sm">Scripts developed</div>
-                  <div class="big-number" id="developed-total">0</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- Right: overall progress -->
-      <aside class="space-y-6">
-        <div class="card">
-          <h3 class="text-lg font-semibold">Overall Progress • Live</h3>
-          <p class="muted mt-1 text-sm">Tracking script creation and approvals vs release targets.</p>
-
-          <div class="mt-4 border rounded-lg p-3 bg-gradient-to-r from-sky-800/30 to-cyan-800/10">
-            <div class="muted text-xs uppercase tracking-wide">Created</div>
-            <div class="flex items-baseline justify-between mt-1">
-              <div class="text-lg font-semibold" id="created-numbers">0 / 0</div>
-              <div class="text-2xl font-bold text-sky-300" id="created-percent">0%</div>
-            </div>
-            <div class="mt-3 h-3 bg-slate-800 rounded-full overflow-hidden">
-              <div id="created-bar" style="height:100%; width:0%; background:linear-gradient(90deg,#61dafb,#7ee6c9);"></div>
-            </div>
-            <div class="muted text-xs mt-2" id="created-more">— more scripts needed to hit created target.</div>
-          </div>
-
-          <div class="mt-4 border rounded-lg p-3 bg-gradient-to-r from-emerald-800/30 to-green-800/10">
-            <div class="muted text-xs uppercase tracking-wide">Approved (Overall)</div>
-            <div class="flex items-baseline justify-between mt-1">
-              <div class="text-lg font-semibold" id="approved-numbers">0 / 0</div>
-              <div class="text-2xl font-bold text-emerald-300" id="approved-percent">0%</div>
-            </div>
-            <div class="mt-3 h-3 bg-slate-800 rounded-full overflow-hidden">
-              <div id="approved-bar" style="height:100%; width:0%; background:linear-gradient(90deg,#7ee6c9,#2ec4b6);"></div>
-            </div>
-            <div class="muted text-xs mt-2" id="approved-more">— more scripts needed to hit approval target.</div>
-          </div>
-        </div>
-
-        <!-- Release target small box -->
-        <div class="card">
-          <div class="muted text-xs">Release Target</div>
-          <div class="mt-2 text-sm">Scripts Created: <span id="target-created">0</span></div>
-          <div class="mt-1 text-sm">Scripts Approved: <span id="target-approved">0</span></div>
-          <div class="muted text-xs mt-3">Target by <span id="target-deadline">—</span></div>
-        </div>
-      </aside>
-    </main>
-
-    <footer class="mt-8 muted text-sm">Last updated: <span id="last-updated">—</span> • Updated by: <span id="updated-by">—</span></footer>
-  </div>
-
-  <script>
-    // Reads /count.json, updates the replaced area: mobile, magiqa, developed, and the created/approved widgets.
-    // Graceful with missing keys.
-    (function(){
-      const jsonPath = './count.json';
-
-      // Utility functions
-      const el = id => document.getElementById(id);
-      const n = v => {
-        const x = Number(v);
-        return Number.isFinite(x) ? x : 0;
-      };
-      const safeText = (v, fallback = '—') => {
-        if (v === null || v === undefined || (typeof v === 'string' && v.trim()==='')) return fallback;
-        return v;
+      const formatWeekDate = (value) => {
+        if (!value) return "";
+        const d = new Date(value);
+        if (isNaN(d.getTime())) return value;
+        return d.toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric"
+        });
       };
 
-      async function loadAndRender(){
-        try {
-          const res = await fetch(jsonPath + '?_=' + Date.now());
-          if (!res.ok) throw new Error('Failed to load count.json: ' + res.status);
-          const data = await res.json();
-
-          // Last updated / updatedBy
-          el('last-updated').textContent = data.lastUpdated ? (new Date(data.lastUpdated)).toLocaleString() : '—';
-          el('updated-by').textContent = data.updatedBy || '—';
-
-          // Week range display (if present)
-          if (data.weekInfo && (data.weekInfo.from || data.weekInfo.to)) {
-            el('week-range').textContent = `Week: ${data.weekInfo.from || '—'} → ${data.weekInfo.to || '—'}`;
-          } else {
-            el('week-range').textContent = 'Week: —';
-          }
-
-          // === Mobile / MagiQA / Developed ===
-          const mobile = (data.touchpoints && data.touchpoints.mobile) ? data.touchpoints.mobile : null;
-          const magiqa = (data.touchpoints && data.touchpoints.magiqa) ? data.touchpoints.magiqa : null;
-          const developed = data.developed || null;
-
-          el('mobile-name').textContent = safeText(mobile && mobile.name, 'Mobile');
-          el('mobile-finished').textContent = n(mobile && mobile.finished);
-
-          el('magiqa-name').textContent = safeText(magiqa && magiqa.name, 'MagiQA');
-          el('magiqa-finished').textContent = n(magiqa && magiqa.finished);
-
-          el('developed-total').textContent = n(developed && developed.totalDeveloped);
-
-          // === Created / Approved summary logic ===
-          // totalCreated = sum of team[].totalCreated (fallback sum of todayCreated)
-          const team = Array.isArray(data.team) ? data.team : [];
-          const sumTotalCreated = team.reduce((s, m) => s + n(m.totalCreated), 0);
-          const sumTodayCreated = team.reduce((s, m) => s + n(m.todayCreated), 0);
-          const totalCreated = sumTotalCreated > 0 ? sumTotalCreated : sumTodayCreated;
-
-          // approved so far: prefer goals.currentApproved if present and >0, else sum per-member totalApproved
-          const goals = data.goals || {};
-          const approvedOverall = n(goals.currentApproved) > 0 ? n(goals.currentApproved) : team.reduce((s, m) => s + n(m.totalApproved), 0);
-
-          const targetCreated = n(goals.targetCreated);
-          const targetApproved = n(goals.targetApproved);
-
-          // update created widget
-          el('created-numbers').textContent = `${totalCreated} / ${targetCreated}`;
-          const createdPct = targetCreated > 0 ? Math.round((totalCreated / targetCreated) * 100) : 0;
-          el('created-percent').textContent = createdPct + '%';
-          el('created-bar').style.width = Math.min(createdPct, 100) + '%';
-          const moreCreated = Math.max(0, targetCreated - totalCreated);
-          el('created-more').textContent = moreCreated === 0 ? 'Target reached' : `${moreCreated} more scripts needed to hit created target.`;
-
-          // update approved widget
-          el('approved-numbers').textContent = `${approvedOverall} / ${targetApproved}`;
-          const approvedPct = targetApproved > 0 ? Math.round((approvedOverall / targetApproved) * 100) : 0;
-          el('approved-percent').textContent = approvedPct + '%';
-          el('approved-bar').style.width = Math.min(approvedPct, 100) + '%';
-          const moreApproved = Math.max(0, targetApproved - approvedOverall);
-          el('approved-more').textContent = moreApproved === 0 ? 'Approval target reached' : `${moreApproved} more scripts needed to hit approval target.`;
-
-          // release target details
-          el('target-created').textContent = targetCreated;
-          el('target-approved').textContent = targetApproved;
-          el('target-deadline').textContent = goals.deadline || '—';
-
-          // populate week top-3 simple values if team sorted by todayCreated
-          // We'll compute top-3 by todayCreated descending
-          const sortedByWeek = team.slice().sort((a,b) => n(b.todayCreated) - n(a.todayCreated));
-          for (let i=1;i<=3;i++){
-            const item = sortedByWeek[i-1];
-            el('week' + i + '-name').textContent = item ? (item.name || '—') : '—';
-            el('week' + i + '-count').textContent = item ? n(item.todayCreated) : 0;
-          }
-
-        } catch (err) {
-          console.error(err);
-          // If fetch fails, display placeholders and keep console error
-          el('mobile-name').textContent = '—';
-          el('mobile-finished').textContent = 0;
-          el('magiqa-name').textContent = '—';
-          el('magiqa-finished').textContent = 0;
-          el('developed-total').textContent = 0;
-          el('last-updated').textContent = '—';
-          el('updated-by').textContent = '—';
-          el('created-numbers').textContent = '0 / 0';
-          el('approved-numbers').textContent = '0 / 0';
-          el('created-percent').textContent = '0%';
-          el('approved-percent').textContent = '0%';
-          el('created-bar').style.width = '0%';
-          el('approved-bar').style.width = '0%';
+      const getWeekLabel = () => {
+        if (weekInfo.from && weekInfo.to) {
+          return `Week: ${formatWeekDate(weekInfo.from)} – ${formatWeekDate(weekInfo.to)}`;
         }
-      }
+        return "This Week";
+      };
 
-      // initial load
-      loadAndRender();
+      // Load from count.json and refresh every 30 seconds
+      useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const res = await fetch(DATA_URL + "?cb=" + Date.now());
+            if (!res.ok) {
+              throw new Error("Failed to load count.json: " + res.status);
+            }
+            const json = await res.json();
+            if (Array.isArray(json.team)) {
+              setTeamData(json.team);
+            } else {
+              setTeamData([]);
+            }
+            if (json.goals && typeof json.goals === "object") {
+              setGoalData(prev => ({
+                ...prev,
+                ...json.goals
+              }));
+            }
+            if (json.weekInfo && typeof json.weekInfo === "object") {
+              setWeekInfo(json.weekInfo);
+            } else {
+              setWeekInfo({ from: "", to: "" });
+            }
+            setLastUpdated(json.lastUpdated || "");
+            setUpdatedBy(json.updatedBy || "");
+            setError("");
+          } catch (e) {
+            console.error(e);
+            setError("Unable to load latest data. Showing empty leaderboard.");
+            setTeamData([]);
+          }
+        };
 
-      // optional: poll every 30s for updates
-      setInterval(loadAndRender, 30 * 1000);
+        fetchData();
+        const intervalId = setInterval(fetchData, 30000); // refresh every 30s
+        return () => clearInterval(intervalId);
+      }, []);
 
-    })();
+      // Clock
+      useEffect(() => {
+        const timerId = setInterval(() => {
+          setCurrentTime(new Date());
+        }, 1000);
+        return () => clearInterval(timerId);
+      }, []);
+
+      const formatDateTime = (date) => {
+        return date.toLocaleString("en-IN", {
+          weekday: "short",
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: true,
+        });
+      };
+
+      const getInitials = (name = "") => {
+        const parts = name.trim().split(/\s+/);
+        if (parts.length === 1) {
+          return parts[0].slice(0, 2).toUpperCase();
+        }
+        return (parts[0][0] + parts[1][0]).toUpperCase();
+      };
+
+      const totalCreated   = teamData.reduce((s, m) => s + (m.totalCreated   || 0), 0);
+      // Use goals.currentApproved if present, otherwise fall back to old per-member totalApproved
+      const totalApproved = goalData.currentApproved != null && goalData.currentApproved !== ""
+        ? Number(goalData.currentApproved)
+        : teamData.reduce((s, m) => s + (m.totalApproved || 0), 0);
+      const weekCreated    = teamData.reduce((s, m) => s + (m.todayCreated   || 0), 0);   // "today" = weekly
+
+      const remainingCreated  = Math.max((goalData.targetCreated  || 0) - totalCreated, 0);
+      const remainingApproved = Math.max((goalData.targetApproved || 0) - totalApproved, 0);
+
+      const createdProgress  = goalData.targetCreated  ? (totalCreated  / goalData.targetCreated)  * 100 : 0;
+      const approvedProgress = goalData.targetApproved ? (totalApproved / goalData.targetApproved) * 100 : 0;
+
+      const top3WeekCreated  = [...teamData]
+        .sort((a,b)=> (b.todayCreated  || 0)-(a.todayCreated  || 0))
+        .slice(0,3);
+      const top3TotalCreated = [...teamData]
+        .sort((a,b)=> (b.totalCreated  || 0)-(a.totalCreated  || 0))
+        .slice(0,3);
+
+      return (
+        <div className="min-h-screen bg-gradient-to-br from-sky-950 via-slate-950 to-slate-900 text-white flex items-stretch justify-center">
+          <div className="w-full max-w-[1800px] px-4 sm:px-6 lg:px-10 py-6 sm:py-8 lg:py-10">
+            {/* Header */}
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6 sm:mb-8">
+              <div>
+                <div className="flex items-center gap-3">
+                  <span className="inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-amber-400/10 text-amber-300">
+                    <Trophy />
+                  </span>
+                  <div>
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight">
+                      Automation Squad Leaderboard
+                    </h1>
+                    <p className="text-xs sm:text-sm text-slate-300 mt-1">
+                      Live view of script creation & approvals across the team
+                    </p>
+                  </div>
+                </div>
+                <p className="text-[11px] sm:text-xs text-slate-400 mt-2">
+                  {formatDateTime(currentTime)}
+                  {lastUpdated && (
+                    <>
+                      <span className="mx-2 text-slate-500">•</span>
+                      <span>Last updated: {new Date(lastUpdated).toLocaleString("en-IN")}</span>
+                    </>
+                  )}
+                  {updatedBy && (
+                    <>
+                      <span className="mx-2 text-slate-500">•</span>
+                      <span>Updated by: {updatedBy}</span>
+                    </>
+                  )}
+                </p>
+              </div>
+
+              <div className="flex flex-col items-end gap-1 text-right">
+                <span className="text-[10px] sm:text-xs uppercase tracking-[0.2em] text-sky-300">
+                  Release Target
+                </span>
+                <p className="text-sm sm:text-base text-slate-200">
+                  Scripts Created:{" "}
+                  <span className="font-semibold text-sky-300">
+                    {totalCreated} / {goalData.targetCreated || 0}
+                  </span>
+                </p>
+                <p className="text-sm sm:text-base text-slate-200">
+                  Scripts Approved:{" "}
+                  <span className="font-semibold text-emerald-300">
+                    {totalApproved} / {goalData.targetApproved || 0}
+                  </span>
+                </p>
+                {goalData.deadline && (
+                  <p className="text-[11px] sm:text-xs text-slate-400">
+                    Target by <span className="font-medium text-slate-200">{goalData.deadline}</span>
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {error && (
+              <div className="mb-4 px-4 py-3 rounded-xl bg-red-900/40 border border-red-500/40 text-sm text-red-100">
+                {error}
+              </div>
+            )}
+
+            {/* Top row: Hall of Fame primary, Progress secondary */}
+            <div className="grid grid-cols-1 lg:grid-cols-[2.2fr,0.8fr] gap-5 lg:gap-6 mb-6">
+              {/* Weekly Hall of Fame - PRIMARY */}
+              <div className="bg-slate-900/60 border border-slate-800 rounded-2xl shadow-2xl p-5 sm:p-7 flex flex-col gap-5">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-start gap-3">
+                    <span className="inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-amber-400/10 text-amber-300 mt-1">
+                      <Medal />
+                    </span>
+                    <div>
+                      <h2 className="text-2xl sm:text-3xl font-semibold text-slate-50">
+                        Weekly Hall of Fame
+                      </h2>
+                      <p className="text-[11px] sm:text-xs text-slate-400 mt-1">
+                        Weekly and overall champions based on script creation.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="hidden sm:flex flex-col items-end text-[11px] sm:text-xs text-slate-400">
+                    <span className="font-medium text-sky-300">{getWeekLabel()}</span>
+                    <span>
+                      This week created:{" "}
+                      <span className="text-sky-200 font-semibold">{weekCreated}</span>
+                    </span>
+                  </div>
+                </div>
+
+                {/* This Week - Top 3 horizontal */}
+                <div>
+                  <p className="text-[11px] uppercase tracking-[0.2em] text-sky-300 mb-3">
+                    This Week · Top 3
+                  </p>
+                  {top3WeekCreated.length === 0 ? (
+                    <p className="text-slate-400 text-sm">No data</p>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {top3WeekCreated.map((m, idx) => (
+                        <div
+                          key={m.id || `week-${idx}`}
+                          className={
+                            idx === 0
+                              ? "rounded-2xl bg-slate-900/80 border border-sky-500/70 px-4 py-4 flex flex-col justify-between"
+                              : "rounded-xl bg-slate-900/50 border border-slate-700/80 px-3 py-3 flex flex-col justify-between"
+                          }
+                        >
+                          <div className="flex items-center gap-2.5 mb-2">
+                            <div className={
+                              idx === 0
+                                ? "w-10 h-10 rounded-full bg-sky-500/25 border border-sky-400/80 flex items-center justify-center text-sm font-semibold"
+                                : "w-7 h-7 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-[11px]"
+                            }>
+                              {getInitials(m.name)}
+                            </div>
+                            <div>
+                              <div className={
+                                idx === 0
+                                  ? "font-semibold text-slate-50 text-2xl sm:text-3xl"
+                                  : "font-semibold text-slate-100 text-lg sm:text-xl"
+                              }>
+                                #{idx + 1} · {m.name}
+                              </div>
+                              <div className="text-[11px] text-slate-400">
+                                Created this week
+                              </div>
+                            </div>
+                          </div>
+                          <div className={
+                            idx === 0
+                              ? "text-3xl sm:text-4xl font-extrabold text-sky-300 text-right"
+                              : "text-xl font-bold text-sky-200 text-right"
+                          }>
+                            {m.todayCreated || 0}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Overall - Top 3 horizontal */}
+                <div>
+                  <p className="text-[11px] uppercase tracking-[0.2em] text-emerald-300 mb-3">
+                    Overall · Top 3
+                  </p>
+                  {top3TotalCreated.length === 0 ? (
+                    <p className="text-slate-400 text-sm">No data</p>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {top3TotalCreated.map((m, idx) => (
+                        <div
+                          key={m.id || `overall-${idx}`}
+                          className={
+                            idx === 0
+                              ? "rounded-2xl bg-slate-900/80 border border-emerald-500/70 px-4 py-4 flex flex-col justify-between"
+                              : "rounded-xl bg-slate-900/50 border border-slate-700/80 px-3 py-3 flex flex-col justify-between"
+                          }
+                        >
+                          <div className="flex items-center gap-2.5 mb-2">
+                            <div className={
+                              idx === 0
+                                ? "w-10 h-10 rounded-full bg-emerald-500/25 border border-emerald-400/80 flex items-center justify-center text-sm font-semibold"
+                                : "w-7 h-7 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-[11px]"
+                            }>
+                              {getInitials(m.name)}
+                            </div>
+                            <div>
+                              <div className={
+                                idx === 0
+                                  ? "font-semibold text-slate-50 text-2xl sm:text-3xl"
+                                  : "font-semibold text-slate-100 text-lg sm:text-xl"
+                              }>
+                                #{idx + 1} · {m.name}
+                              </div>
+                              <div className="text-[11px] text-slate-400">
+                                Total created
+                              </div>
+                            </div>
+                          </div>
+                          <div className={
+                            idx === 0
+                              ? "text-3xl sm:text-4xl font-extrabold text-emerald-300 text-right"
+                              : "text-xl font-bold text-emerald-200 text-right"
+                          }>
+                            {m.totalCreated || 0}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Overall Progress - SECONDARY */}
+              <div className="bg-slate-900/60 border border-slate-800 rounded-2xl shadow-2xl p-5 sm:p-7 flex flex-col gap-5">
+                <div className="flex items-start gap-3 mb-1">
+                  <div>
+                    <h2 className="text-xl sm:text-2xl font-semibold text-slate-50 flex items-center gap-2">
+                      Overall Progress
+                      <span className="inline-flex items-center gap-1 text-[11px] sm:text-xs text-slate-400">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        Live
+                      </span>
+                    </h2>
+                    <p className="text-xs sm:text-sm text-slate-400 mt-1">
+                      Tracking script creation and approvals vs release targets.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4">
+                  {/* Created progress */}
+                  <div className="p-3 sm:p-4 rounded-xl bg-sky-950/60 border border-sky-900/60">
+                    <div className="flex items-center justify-between mb-2">
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.18em] text-sky-300">
+                          Created
+                        </p>
+                        <p className="text-lg sm:text-xl font-semibold text-slate-50">
+                          {totalCreated} / {goalData.targetCreated || 0}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-2xl sm:text-3xl font-extrabold text-sky-300">
+                          {createdProgress.toFixed(0)}%
+                        </p>
+                        <p className="text-[11px] text-slate-400">of target</p>
+                      </div>
+                    </div>
+                    <div className="w-full h-3.5 rounded-full bg-slate-800 overflow-hidden">
+                      <div
+                        className="h-3.5 rounded-full bg-gradient-to-r from-sky-400 via-sky-300 to-emerald-300 transition-all duration-700"
+                        style={{ width: `${Math.min(createdProgress, 120)}%` }}
+                      />
+                    </div>
+                    <p className="text-[11px] mt-1.5 text-slate-400">
+                      {remainingCreated > 0
+                        ? `${remainingCreated} more scripts needed to hit created target.`
+                        : "Created target achieved 🎉"}
+                    </p>
+                  </div>
+
+                  {/* Approved progress (overall only) */}
+                  <div className="p-3 sm:p-4 rounded-xl bg-emerald-950/60 border border-emerald-900/60">
+                    <div className="flex items-center justify-between mb-2">
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.18em] text-emerald-300">
+                          Approved (Overall)
+                        </p>
+                        <p className="text-lg sm:text-xl font-semibold text-slate-50">
+                          {totalApproved} / {goalData.targetApproved || 0}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-2xl sm:text-3xl font-extrabold text-emerald-300">
+                          {approvedProgress.toFixed(0)}%
+                        </p>
+                        <p className="text-[11px] text-slate-400">of target</p>
+                      </div>
+                    </div>
+                    <div className="w-full h-3.5 rounded-full bg-slate-800 overflow-hidden">
+                      <div
+                        className="h-3.5 rounded-full bg-gradient-to-r from-emerald-400 via-emerald-300 to-sky-300 transition-all duration-700"
+                        style={{ width: `${Math.min(approvedProgress, 120)}%` }}
+                      />
+                    </div>
+                    <p className="text-[11px] mt-1.5 text-slate-400">
+                      {remainingApproved > 0
+                        ? `${remainingApproved} more scripts needed to hit approval target.`
+                        : "Approval target achieved 🎉"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Table */}
+            <div className="bg-slate-900/70 border border-slate-800 rounded-2xl shadow-xl p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
+                <div>
+                  <h2 className="text-lg sm:text-xl font-semibold text-slate-50 flex items-center gap-2">
+                    Squad Breakdown
+                  </h2>
+                  <p className="text-[11px] sm:text-xs text-slate-400 mt-1">
+                    Each row represents one squad member&apos;s contribution.
+                  </p>
+                </div>
+                <div className="text-[11px] sm:text-xs text-slate-400">
+                  <span className="font-medium text-sky-300">{getWeekLabel()}</span>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="min-w-full text-xs sm:text-sm text-left">
+                  <thead>
+                    <tr className="border-b border-slate-800 text-[11px] sm:text-xs uppercase tracking-[0.16em] text-slate-400">
+                      <th className="py-2 pr-3 font-medium">Member</th>
+                      <th className="py-2 px-3 font-medium text-right">This Week Created</th>
+                      <th className="py-2 px-3 font-medium text-right">Total Created</th>
+                      <th className="py-2 px-3 font-medium text-right">Total Approved</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {teamData.length === 0 && (
+                      <tr>
+                        <td colSpan="4" className="py-6 text-center text-slate-500">
+                          No data loaded. Ensure count.json is present in the repo.
+                        </td>
+                      </tr>
+                    )}
+                    {teamData.map((m, idx) => (
+                      <tr
+                        key={m.id || idx}
+                        className="border-b border-slate-800/70 hover:bg-slate-800/60 transition-colors"
+                      >
+                        <td className="py-2 pr-3">
+                          <div className="flex items-center gap-2 sm:gap-3">
+                            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-[11px] sm:text-xs text-slate-200">
+                              {getInitials(m.name)}
+                            </div>
+                            <div>
+                              <div className="font-medium text-slate-50 text-xs sm:text-sm">
+                                {m.name}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="py-2 px-3 text-right text-sky-200 font-semibold">
+                          {m.todayCreated || 0}
+                        </td>
+                        <td className="py-2 px-3 text-right">
+                          {m.totalCreated || 0}
+                        </td>
+                        <td className="py-2 px-3 text-right">
+                          {m.totalApproved || 0}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<AutomationLeaderboard />);
   </script>
 </body>
 </html>
