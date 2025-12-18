@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-18T06:29:12.477Z",
+  "lastUpdated": "2025-12-18T06:31:45.965Z",
   "updatedBy": "Ramdas",
   "weekInfo": {
     "from": "2025-12-12",
@@ -22,14 +22,14 @@
     {
       "id": 2,
       "name": "Sahana",
-      "todayCreated": 2,
+      "todayCreated": 3,
       "totalCreated": 44,
       "totalApproved": 0
     },
     {
       "id": 3,
       "name": "Samhitha",
-      "todayCreated": 3,
+      "todayCreated": 4,
       "totalCreated": 33,
       "totalApproved": 0
     },
@@ -50,7 +50,7 @@
     {
       "id": 6,
       "name": "Hemant",
-      "todayCreated": 1,
+      "todayCreated": 7,
       "totalCreated": 18,
       "totalApproved": 0
     },
