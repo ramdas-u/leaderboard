@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-23T13:42:14.455Z",
+  "lastUpdated": "2025-12-29T08:05:33.677Z",
   "updatedBy": "Ramdas",
   "weekInfo": {
     "from": "2025-12-19",
@@ -22,28 +22,28 @@
     {
       "id": 2,
       "name": "Sahana",
-      "todayCreated": 0,
+      "todayCreated": 2,
       "totalCreated": 44,
       "totalApproved": 0
     },
     {
       "id": 3,
       "name": "Samhitha",
-      "todayCreated": 0,
+      "todayCreated": 1,
       "totalCreated": 33,
       "totalApproved": 0
     },
     {
       "id": 4,
       "name": "Praveen",
-      "todayCreated": 0,
+      "todayCreated": 1,
       "totalCreated": 2,
       "totalApproved": 0
     },
     {
       "id": 5,
       "name": "Santhosh R",
-      "todayCreated": 1,
+      "todayCreated": 2,
       "totalCreated": 7,
       "totalApproved": 0
     },
@@ -64,13 +64,13 @@
     {
       "id": 10,
       "name": "Sharanya",
-      "todayCreated": 1,
+      "todayCreated": 2,
       "totalCreated": 17,
       "totalApproved": 0
     }
   ],
   "developed": {
-    "totalDeveloped": 169
+    "totalDeveloped": 175
   },
   "touchpoints": {
     "mobile": {
