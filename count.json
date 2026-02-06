@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-01-12T10:03:06.619Z",
+  "lastUpdated": "2026-02-06T10:25:49.303Z",
   "updatedBy": "Ramdas",
   "weekInfo": {
     "from": "2025-12-19",
@@ -8,7 +8,7 @@
   "goals": {
     "targetCreated": 175,
     "targetApproved": 175,
-    "currentApproved": 73,
+    "currentApproved": 103,
     "deadline": "Dec 31, 2025"
   },
   "team": [
@@ -70,7 +70,7 @@
     }
   ],
   "developed": {
-    "totalDeveloped": 175
+    "totalDeveloped": 177
   },
   "touchpoints": {
     "mobile": {
