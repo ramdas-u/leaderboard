@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-09T04:48:33.461Z",
+  "lastUpdated": "2026-02-09T05:50:44.042Z",
   "updatedBy": "Sharanya",
   "weekInfo": {
     "from": "2026-02-02",
@@ -15,7 +15,7 @@
     {
       "id": 2,
       "name": "Sahana",
-      "todayCreated": 2,
+      "todayCreated": 4,
       "totalCreated": 44,
       "totalApproved": 0
     },
@@ -28,7 +28,7 @@
     }
   ],
   "developed": {
-    "totalDeveloped": 178
+    "totalDeveloped": 180
   },
   "touchpoints": {
     "mobile": {
