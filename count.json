@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-19T09:36:41.508Z",
+  "lastUpdated": "2026-02-20T07:15:12.920Z",
   "updatedBy": "Sharanya",
   "weekInfo": {
     "from": "2026-02-09",
@@ -15,14 +15,14 @@
     {
       "id": 2,
       "name": "Sahana",
-      "todayCreated": 4,
+      "todayCreated": 2,
       "totalCreated": 44,
       "totalApproved": 0
     },
     {
       "id": 6,
       "name": "Hemant",
-      "todayCreated": 1,
+      "todayCreated": 0,
       "totalCreated": 18,
       "totalApproved": 0
     },
