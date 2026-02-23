@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-20T07:22:05.677Z",
+  "lastUpdated": "2026-02-23T05:18:24.958Z",
   "updatedBy": "Sharanya",
   "weekInfo": {
     "from": "2026-02-16",
@@ -29,13 +29,13 @@
     {
       "id": 1771493790281.3174,
       "name": "Raj",
-      "todayCreated": 0,
+      "todayCreated": 1,
       "totalCreated": 0,
       "totalApproved": 0
     }
   ],
   "developed": {
-    "totalDeveloped": 190
+    "totalDeveloped": 191
   },
   "touchpoints": {
     "mobile": {
